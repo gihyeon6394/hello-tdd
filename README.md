@@ -20,6 +20,7 @@ Kent Beck
     15. Mixed Currencies
     16. Abstraction, Finally
     17. Money Retrospective
+
 2. The xUnit Example
     18. First Things First
     19. Set the Table
@@ -28,6 +29,7 @@ Kent Beck
     22. Dealing with Failure
     23. How Suite It Is
     24. xUnit Retrospective
+
 3. Patterns for Test-Driven Development
     25. Test-Driven Development Patterns
     26. Red Bar Patterns
