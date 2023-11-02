@@ -22,20 +22,20 @@ Kent Beck
     17. Money Retrospective
 
 2. The xUnit Example
-    18. First Things First
-    19. Set the Table
-    20. Cleaning Up After
-    21. Counting
-    22. Dealing with Failure
-    23. How Suite It Is
-    24. xUnit Retrospective
+    1. First Things First
+    2. Set the Table
+    3. Cleaning Up After
+    4. Counting
+    5. Dealing with Failure
+    6. How Suite It Is
+    7. xUnit Retrospective
 
 3. Patterns for Test-Driven Development
-    25. Test-Driven Development Patterns
-    26. Red Bar Patterns
-    27. Testing Patterns
-    28. Green Bar Patterns
-    29. xUnit Patterns
-    30. Design Patterns
-    31. Refactoring
-    32. Mastering TDD
+    1. Test-Driven Development Patterns
+    2. Red Bar Patterns
+    3. Testing Patterns
+    4. Green Bar Patterns
+    5. xUnit Patterns
+    6. Design Patterns
+    7. Refactoring
+    8. Mastering TDD
