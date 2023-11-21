@@ -334,7 +334,6 @@ public boolean equals(Object object) {
 - 한번의 2개의 test가 모두 실패할 수 있는 리스크
 - 에도 불구하고 진행
 - test와 code의 느슨한 결합을 위해 functionality를 활용
-  - 
 
 > ### story
 >
@@ -388,6 +387,78 @@ private int amount;
 > 9. Equal object (TODO)
 
 ## 5. Franc-ly Speaking
+
+- 큰 테스트에 대응할 수 없으니 더 작은 테스트 생성
+- 뻔뻔하게 중복 테스트 작성
+- VO를 그대로 복사해 `Franc` 생성
+- 중복이 사라질때까지 집에 가지마
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. 5 CHF * 2 = 10 CHF
+
+````
+@Test
+public void testFrancMultiplication() {
+    Franc five = new Franc(5); // compile error : cannot find symbol class Franc
+    assertEquals(new Franc(10), five.times(2)); // compile error : cannot find symbol class Franc
+    assertEquals(new Franc(15), five.times(3)); // compile error : cannot find symbol class Franc
+}
+````
+
+### 속도를 위해 디자인 패턴을 무시
+
+1. Write a test
+2. Make it compile
+3. Run it to see it fail : **여기까지 매우 빠르게**, copy `Dollar` & paste
+4. Make it run
+5. Remove duplication
+
+```java
+class Franc {
+    private int amount;
+
+    Franc(int amount) {
+        this.amount = amount;
+    }
+
+    Franc times(int multiplier) {
+        return new Franc(amount * multiplier);
+    }
+
+    public boolean equals(Object object) {
+        Franc franc = (Franc) object;
+        return amount == franc.amount;
+    }
+}
+```
+
+### 결과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. Common equals
+> 13. Common times
 
 ## 6. Equality for All, Redux
 
