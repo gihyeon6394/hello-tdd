@@ -462,6 +462,90 @@ class Franc {
 
 ## 6. Equality for All, Redux
 
+- common code를 class에서 superclass로 옮김
+- `Dollar` & `Franc`의 중복 제거 (`equals()`)
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. Common equals
+> 13. Common times
+
+```java
+class Dollar extends Money {
+    protected int amount;
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == null) {
+            return false;
+        }
+
+        if (!(object instanceof Dollar)) {
+            return false;
+        }
+
+        Money money = (Money) object;
+        return amount == money.amount;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return amount;
+    }
+}
+
+class Dollar extends Money {
+    // private int amount;
+
+    // no need to override equals() & hashCode()
+
+}
+```
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+    assertFalse(new Dollar(5).equals(new Dollar(6)));
+    assertFalse(new Dollar(5).equals(null));
+    assertFalse(new Dollar(5).equals(new Object()));
+
+    assertTrue(new Franc(5).equals(5));
+    assertFalse(new Franc(5).equals(6));
+}
+````
+
+### 결과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+
 ## 7. Apples and Oranges
 
 ## 8. Makin' Objects
