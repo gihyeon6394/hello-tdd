@@ -202,6 +202,132 @@ Dollar times(int multiplier) {
 
 ## 3. Equality for All
 
+### Value Object : Object를 value처럼 사용하기
+
+- Integer에 1을 추가한다고, 기존 Integer의 값이 바뀌지 않는다.
+- VO의 value는 불변이다. (생성자로부터 주입받은 뒤 변경되지 않는다)
+
+#### VO 장점 : ailiasing 문제를 회피
+
+- ailiasing : 두 개의 reference가 같은 object를 가리키는 것
+- ailiasing 문제를 회피하기 위해 VO는 불변이다.
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. Make "amount" private
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. equals()
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+}
+
+...
+
+@Override
+public boolean equals(Object object) {
+    return true;
+}
+````
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+    assertFalse(new Dollar(5).equals(new Dollar(6)));
+}
+
+
+@Override
+public boolean equals(Object obj) {
+    Dollar dollar = (Dollar) obj;
+    return amount == dollar.amount;
+}
+````
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. Make "amount" private
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+
+````
+@Override
+public boolean equals(Object object) {
+    Dollar dollar= (Dollar) object;
+    return amount == dollar.amount;
+}
+
+...
+
+@Override
+public int hashCode() {
+    return amount;
+}
+
+````
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+    assertFalse(new Dollar(5).equals(new Dollar(6)));
+    assertFalse(new Dollar(5).equals(null));
+}
+
+...
+
+@Override
+public boolean equals(Object object) {
+
+    if(object == null) {
+        return false;
+    }
+
+    Dollar dollar= (Dollar) object;
+    return amount == dollar.amount;
+}
+
+````
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+    assertFalse(new Dollar(5).equals(new Dollar(6)));
+    assertFalse(new Dollar(5).equals(null));
+    assertFalse(new Dollar(5).equals(new Object()));
+}
+
+...
+
+@Override
+public boolean equals(Object object) {
+
+    if(object == null) {
+        return false;
+    }
+
+    if(!(object instanceof Dollar)) {
+        return false;
+    }
+
+    Dollar dollar= (Dollar) object;
+    return amount == dollar.amount;
+}
+````
+
 ## 4. Privacy
 
 ## 5. Franc-ly Speaking
