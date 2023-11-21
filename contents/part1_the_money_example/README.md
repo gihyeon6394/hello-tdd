@@ -137,6 +137,69 @@ public class Dollar {
 
 ## 2. Degenerate Objects
 
+### TDD cycle (목적 : 동작하는 clean code를 만들기)
+
+1. test 작성 (story 작가처럼)
+    - operation을 code에 생각 나는대로 작성
+2. 동작하도록 만듦 (stub 등을 활용)
+    - test 결과가 succeed (green bar)가 되도록 빠르게 만듦
+    - 주로 타이핑으로 해결 (몇분 안에 끝날일이면 코드 작성)
+    - 동작은 하지만, 코드가 깔끔하지 않음 (일단 더러운 부분을 메모해두고)
+3. 올바르게 만듦 (stub 등을 해결)
+    - 코드를 깔끔하게 만듦
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. Make "amount" private
+> 4. Dollar side-effects?
+> 5. Money rounding?
+
+```
+@Test
+public void testMultiplication() {
+   Dollar five= new Dollar(5);
+   five.times(2);
+   assertEquals(10, five.amount);
+   five.times(3);
+   assertEquals(15, five.amount);
+}
+```
+
+```
+@Test
+public void testMultiplication() {
+   Dollar five= new Dollar(5);
+   Dollar product= five.times(2);
+   assertEquals(10, product.amount);
+   product= five.times(3);
+   assertEquals(15, product.amount);
+}
+
+... 
+
+Dollar times(int multiplier) {
+   return new Dollar(amount * multiplier);
+}
+```
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. Make "amount" private
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+
+### 빠르게 green bar를 만드는 전략
+
+- 전략 1. Fake It : 상수를 반환하게 만듦 -> 상수를 변수로 대체
+- 전략 2. Obvious Implementation : 가장 쉬운 방법으로 구현
+- 전략 3. Triangulation
+    - stub을 사용해 빠르게 compile error를 해결
+    - right code를 추가해 test를 통과시킴
+
 ## 3. Equality for All
 
 ## 4. Privacy
