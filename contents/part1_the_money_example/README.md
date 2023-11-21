@@ -548,6 +548,84 @@ public void testEquality() {
 
 ## 7. Apples and Oranges
 
+- `getClass()` 사용해서 test 통과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+> 14. Compare Francs with Dollars
+
+````
+@Test
+public void testEquality() {
+    assertTrue(new Dollar(5).equals(new Dollar(5)));
+    assertFalse(new Dollar(5).equals(new Dollar(6)));
+    assertFalse(new Dollar(5).equals(null));
+    assertFalse(new Dollar(5).equals(new Object()));
+
+    assertTrue(new Franc(5).equals(new Franc(5)));
+    assertFalse(new Franc(5).equals(new Franc(6)));
+
+    assertFalse(new Franc(5).equals(new Dollar(5))); // shit! return true
+}
+````
+
+```java
+class Dollar extends Money {
+    protected int amount;
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == null) {
+            return false;
+        }
+
+        if (!(object instanceof Dollar)) {
+            return false;
+        }
+
+        Money money = (Money) object;
+        return amount == money.amount
+                && getClass().equals(money.getClass()); // Class 객체 검증 추가
+
+    }
+
+}
+```
+
+### 결과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+> 14. ~~Compare Francs with Dollars~~
+> 15. Currency?
+
 ## 8. Makin' Objects
 
 ## 9. Times We're Livin' In

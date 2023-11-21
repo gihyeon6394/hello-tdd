@@ -15,7 +15,7 @@ public class Money {
         }
 
         Money money = (Money) object;
-        return amount == money.amount;
+        return amount == money.amount && getClass().equals(money.getClass());
     }
 
     @Override
