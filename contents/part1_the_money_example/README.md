@@ -628,6 +628,103 @@ class Dollar extends Money {
 
 ## 8. Makin' Objects
 
+- 중복 `times()` 제거
+- `times()` 를 superclass로
+- test 와 subclass decoupling : factory method
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+> 14. ~~Compare Francs with Dollars~~
+> 15. Currency?
+
+```java
+public class Dollar extends Money {
+    // ...
+    public Money times(int multiplier) {
+        return new Dollar(amount * multiplier);
+    }
+}
+
+public class Franc extends Money {
+    // ...
+    public Money times(int multiplier) {
+        return new Franc(amount * multiplier);
+    }
+}
+```
+
+````
+@Test
+public void testMultiplication() {
+    Money five = Money.dollar(5); // compile error : cannot find symbol class Money
+    assertEquals(new Dollar(10), five.times(2)); // compile error : cannot find symbol method times(int)
+    assertEquals(new Dollar(15), five.times(3));
+}
+````
+
+```java
+
+public abstract class Money {
+
+    public static Money dollar(int amount) {
+        return new Dollar(amount);
+    }
+
+    public static Money franc(int amount) {
+        return new Franc(amount);
+    }
+
+    public abstract Money times(int multiplier);
+    // ...
+}
+```
+
+```java
+public class MoneyTest {
+
+    @Test
+    public void testMultiplication() {
+        Money five = Money.dollar(5);
+        assertEquals(Money.dollar(10), five.times(2));
+        assertEquals(Money.dollar(15), five.times(3));
+    }
+
+    @Test
+    public void testEquality() {
+        assertTrue(Money.dollar(5).equals(Money.dollar(5)));
+        assertFalse(Money.dollar(5).equals(Money.dollar(6)));
+        assertFalse(Money.dollar(5).equals(null));
+        assertFalse(Money.dollar(5).equals(new Object()));
+
+        assertTrue(Money.franc(5).equals(Money.franc(5)));
+        assertFalse(Money.franc(5).equals(Money.franc(6)));
+
+        assertFalse(Money.franc(5).equals(Money.dollar(5)));
+    }
+
+    @Test
+    public void testFrancMultiplication() {
+        Money five = Money.franc(5);
+        assertEquals(Money.franc(10), five.times(2));
+        assertEquals(Money.franc(15), five.times(3));
+    }
+}
+
+````
+
 ## 9. Times We're Livin' In
 
 ## 10. Interesting Times
