@@ -330,6 +330,63 @@ public boolean equals(Object object) {
 
 ## 4. Privacy
 
+- functionality를 활용해 test 향상 (VO, equals)
+- 한번의 2개의 test가 모두 실패할 수 있는 리스크
+- 에도 불구하고 진행
+- test와 code의 느슨한 결합을 위해 functionality를 활용
+  - 
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. Make "amount" private
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+
+```
+// as-is
+public void testMultiplication() {
+    Dollar five = new Dollar(5);
+    Dollar product = five.times(2);
+    assertEquals(10, product.amount);
+    product = five.times(3);
+    assertEquals(15, product.amount);
+}
+
+// to-be
+@Test
+public void testMultiplication() {
+    Dollar five= new Dollar(5);
+    assertEquals(new Dollar(10), five.times(2));
+    assertEquals(new Dollar(15), five.times(3));
+}
+
+...
+
+private int amount;
+````
+
+- `Dollar` VO로 비교
+- 임시 변수 `product` 제거
+- `amount` 필드를 private로 변경
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+
 ## 5. Franc-ly Speaking
 
 ## 6. Equality for All, Redux
