@@ -2,20 +2,20 @@ package org.example.part1;
 
 public class Franc extends Money {
 
-    private String currency;
-
     public Franc(int amount, String currency) {
         super(amount, currency);
     }
 
-    @Override
+
     public Money times(int multiplier) {
-        return Money.franc(amount * multiplier);
+        return new Money(amount * multiplier, currency);
     }
 
     @Override
-    String currency() {
-        return currency;
+    public String toString() {
+        return "Franc{" +
+                "amount=" + amount +
+                ", currency='" + currency + '\'' +
+                '}';
     }
-
 }

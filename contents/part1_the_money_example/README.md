@@ -911,6 +911,91 @@ class Franc extends Money {
 
 ## 10. Interesting Times
 
+- `times()`를 superclass로 이동
+- `times()` 는 `Money`를 반환
+- `equals()` 는 `Money`를 비교, class 비교 제거
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. **Common times**
+> 14. ~~Compare Francs with Dollars~~
+> 15. ~~Currency?~~
+> 16. Delete testFrancMultiplication?
+
+```java
+class Money {
+    // ...
+    public Money times(int amount) {
+        return null;
+    }
+}
+
+class Franc extends Money {
+    // ...
+    public Money times(int multiplier) {
+        return new Franc(amount * multiplier, currency);
+    }
+}
+```
+
+```java
+class Money {
+    // ...
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == null) {
+            return false;
+        }
+
+        if (!(object instanceof Money)) {
+            return false;
+        }
+
+        Money money = (Money) object;
+        return amount == money.amount
+                //  && getClass().equals(money.getClass()) class의 종류를 비교하는 것은 불필요
+                && currency().equals(money.currency()); // currency 추가
+    }
+
+}
+
+```
+
+### 결과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. ~~Common times~~
+> 14. ~~Compare Francs with Dollars~~
+> 15. ~~Currency?~~
+> 16. Delete testFrancMultiplication?
+
 ## 11. The Root of All Evil
 
 ## 12. Addition, Finally
