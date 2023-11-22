@@ -1,6 +1,6 @@
 package org.example.part1;
 
-public class Money {
+public class Money implements Expression {
     protected int amount;
     protected String currency;
 
@@ -8,6 +8,7 @@ public class Money {
         this.currency = currency;
         this.amount = amount;
     }
+
     public static Money dollar(int amount) {
         return new Money(amount, "USD");
     }
@@ -40,6 +41,12 @@ public class Money {
 //                && getClass().equals(money.getClass())
                 && currency().equals(money.currency());
     }
+
+
+    public Expression plus(Money dollar) {
+        return new Money(amount + dollar.amount, currency);
+    }
+
 
     @Override
     public int hashCode() {

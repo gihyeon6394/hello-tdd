@@ -1,10 +1,9 @@
 package part1;
 
-import org.example.part1.Dollar;
-import org.example.part1.Franc;
-import org.example.part1.Money;
+import org.example.part1.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,4 +40,12 @@ public class MoneyTest {
         assertEquals("CHF", Money.franc(1).currency());
     }
 
+    @Test
+    public void testSimpleAddition() {
+        Money five = Money.dollar(5);
+        Expression sum = five.plus(five);
+        Bank bank = new Bank();
+        Money reduced = bank.reduce(sum, "USD"); // Bank라는 객체가 필요하겠지?
+        assertEquals(Money.dollar(10), reduced);
+    }
 }

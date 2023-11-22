@@ -1036,6 +1036,86 @@ public class Money {
 
 ## 12. Addition, Finally
 
+- test 작성 후 빠르게 compile error 해결
+- test green bar 만들기 위해 빠르게 code 작성
+
+> ### story
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. $5 + $5 = $10
+
+```
+@Test
+public void testSimpleAddition() {
+    Money sum = Money.dollar(5).plus(Money.dollar(5));
+    assertEquals(Money.dollar(10), sum);
+}
+
+@Test
+public void testSimpleAddition() {
+    // ...
+    Money reduced = bank.reduce(sum, "USD"); // Bank라는 객체가 필요하겠지?
+    assertEquals(Money.dollar(10), reduced);
+}
+```
+
+```
+// 1. Bank 객체 생성
+@Test
+public void testSimpleAddition() {
+    // ...
+    Bank bank = new Bank();
+    Money reduced = bank.reduce(sum, "USD"); // Bank라는 객체가 필요하겠지?
+    assertEquals(Money.dollar(10), reduced);
+}
+
+// 2. Expression 생성
+@Test
+public void testSimpleAddition() {
+    // ...
+    Expression sum = five.plus(five);
+    Bank bank = new Bank();
+    Money reduced = bank.reduce(sum, "USD"); // Bank라는 객체가 필요하겠지?
+    assertEquals(Money.dollar(10), reduced);
+}
+
+// 3. five는 어디서?
+@Test
+public void testSimpleAddition() {
+    Money five= Money.dollar(5);
+    Expression sum= five.plus(five); // compile error : cannot find symbol class Expression
+    Bank bank = new Bank();
+    Money reduced = bank.reduce(sum, "USD"); // Bank라는 객체가 필요하겠지?
+    assertEquals(Money.dollar(10), reduced);
+}
+
+
+```
+
+```java
+// 4. Expression interface 생성
+interface Expression {
+    // ...
+}
+
+// 5. Expression interface를 구현하는 Money 클래스 생성 -> plus() 구현
+public class Money implements Expression {
+    // ...
+    public Expression plus(Money addend) {
+        return new Money(amount + addend.amount, currency);
+    }
+}
+
+// 6. Bank 클래스 생성 -> reduce() 구현
+public class Bank {
+    // ...
+    public Money reduce(Expression source, String to) {
+        return Money.dollar(10); // 빠르게 green bar를 만들기 위해 임시로 10을 반환
+
+    }
+}
+
+```
+
 ## 13. Make It
 
 ## 14. Change
