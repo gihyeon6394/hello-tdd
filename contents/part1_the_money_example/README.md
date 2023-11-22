@@ -998,6 +998,42 @@ class Money {
 
 ## 11. The Root of All Evil
 
+- Dollar와 Franc를 Money로 대체
+- 로직에도 두 클래스는 큰 차이가 없음
+- subclass를 제거할 준비 : subclass로의 참조를 없앰 (factory method)
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. **Dollar/Franc duplication**
+> 12. ~~Common equals~~
+> 13. ~~Common times~~
+> 14. ~~Compare Francs with Dollars~~
+> 15. ~~Currency?~~
+> 16. Delete testFrancMultiplication?
+
+```java
+public class Money {
+    // ...
+    public static Money dollar(int amount) {
+        return new Money(amount, "USD"); // Dollar -> Money
+    }
+
+    public static Money franc(int amount) {
+        return new Money(amount, "CHF"); // Franc -> Money
+    }
+}
+```
+
 ## 12. Addition, Finally
 
 ## 13. Make It
