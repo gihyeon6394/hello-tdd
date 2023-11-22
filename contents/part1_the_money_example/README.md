@@ -727,6 +727,188 @@ public class MoneyTest {
 
 ## 9. Times We're Livin' In
 
+- subclass의 `times()` 세부구현을 superclass로 이동할 준비
+- `times()`에서 factory method를 사용하도록 변경
+- 생성자를 superclass로 이동
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+> 14. ~~Compare Francs with Dollars~~
+> 15. Currency?
+> 16. Delete testFrancMultiplication?
+
+````
+@Test
+@DisplayName("통화 확인")
+public void testCurrency() {
+    assertEquals("USD", Money.dollar(1).currency());
+    assertEquals("CHF", Money.franc(1).currency());
+}
+````
+
+```java
+class Money {
+    // ...
+    abstract String currency();
+}
+
+class Dollar extends Money {
+    // ...
+    String currency() {
+        return "USD";
+    }
+}
+
+class Franc extends Money {
+    // ...
+    String currency() {
+        return "CHF";
+    }
+}
+```
+
+```java
+class Dollar extends Money {
+    // ...
+    private String currency;
+
+    public Dollar(int amount) {
+        this.amount = amount;
+        this.currency = "USD";
+    }
+
+    String currency() {
+        return currency;
+    }
+}
+
+class Franc extends Money {
+    // ...
+    private String currency;
+
+    public Franc(int amount) {
+        this.amount = amount;
+        this.currency = "CHF";
+    }
+
+    String currency() {
+        return currency;
+    }
+}
+
+class Money {
+    // ...
+    protected String currency;
+
+    String currency() {
+        return currency;
+    }
+}
+```
+
+```java
+class Money {
+    protected String currency;
+
+    public static Money dollar(int amount) {
+        return new Dollar(amount, "USD");
+    }
+
+    public static Money franc(int amount) {
+        return new Franc(amount, "CHF");
+    }
+
+    // ...
+}
+
+class Dollar extends Money {
+    // ...
+    public Dollar(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    @Override
+    public Money times(int multiplier) {
+        return Money.dollar(amount * multiplier);
+    }
+}
+
+class Franc extends Money {
+    // ...
+    public Franc(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    @Override
+    public Money times(int multiplier) {
+        return Money.franc(amount * multiplier);
+    }
+}
+```
+
+```java
+public abstract class Money {
+    public Money(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    // ...
+}
+
+class Dollar extends Money {
+
+    public Dollar(int amount, String currency) {
+        super(amount, currency);
+    }
+    // ...
+}
+
+class Franc extends Money {
+
+    public Franc(int amount, String currency) {
+        super(amount, currency);
+    }
+    // ...
+}
+```
+
+### 결과
+
+> ### story
+>
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. ~~$5 * 2 = $10~~
+> 3. ~~Make "amount" private~~
+> 4. ~~Dollar side-effects?~~
+> 5. Money rounding?
+> 6. ~~equals()~~
+> 7. hashCode() (TODO)
+> 8. Equal null (TODO)
+> 9. Equal object (TODO)
+> 10. ~~5 CHF * 2 = 10 CHF~~
+> 11. Dollar/Franc duplication
+> 12. ~~Common equals~~
+> 13. Common times
+> 14. ~~Compare Francs with Dollars~~
+> 15. ~~Currency?~~
+> 16. Delete testFrancMultiplication?
+
 ## 10. Interesting Times
 
 ## 11. The Root of All Evil
