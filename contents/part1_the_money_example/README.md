@@ -1118,6 +1118,143 @@ public class Bank {
 
 ## 13. Make It
 
+- duplication이 없애기 전에 test 작성이 완료될 수 없음
+- 나중에 필요할 class `Sum`을 test에서 미리 작성
+- `Sum` class를 생성하고, 빠르게 구현
+- 다형성을 통해 class check 명시 제거
+
+> ### story
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. **$5 + $5 = $10**
+> 3. Return Money from $5 + $5
+
+````
+@Test
+public void testPlusReturnsSum() {
+    Money five = Money.dollar(5);
+    Expression result = five.plus(five);
+    Sum sum = (Sum) result; // compile error : cannot find symbol class Sum
+    assertEquals(five, sum.augend);
+    assertEquals(five, sum.addend);
+}
+````
+
+```java
+public class Sum {
+    Money augend;
+    Money addend;
+
+    public Sum() {
+    }
+
+    public Sum(Money augend, Money addend) {
+        this.augend = augend;
+        this.addend = addend;
+    }
+
+    public Money reduce(String to) {
+        int amount = augend.amount + addend.amount;
+        return new Money(amount, to);
+    }
+}
+
+public class Bank {
+    public Money reduce(Expression source, String to) {
+        Sum sum = (Sum) source;
+        return sum.reduce(to);
+    }
+}
+
+public class Money {
+    // ...
+
+    public Expression plus(Money addend) {
+        return new Sum(this, addend);
+    }
+}
+
+```
+
+```
+@Test
+public void testPlusReturnsSum() {
+    Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
+    Bank bank = new Bank();
+    Money result = bank.reduce(sum, "USD");
+    assertEquals(Money.dollar(7), result);
+}
+```
+
+> ### story
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. **$5 + $5 = $10**
+> 3. Return Money from $5 + $5
+> 4. Bank.reduce(Money)
+
+
+<img src="img.png"  width="60%"/>
+
+```java
+public class Bank {
+    public Money reduce(Expression source, String to) {
+        Sum sum = (Sum) source; // java.lang.ClassCastException: class Money cannot be cast to class Sum
+        return sum.reduce(to);
+    }
+}
+```
+
+```java
+public class Bank {
+    public Money reduce(Expression source, String to) {
+        if (source instanceof Money) return (Money) source;
+
+        Sum sum = (Sum) source;
+        return sum.reduce(to);
+    }
+}
+```
+
+<img src="img_1.png"  width="60%"/>
+
+```java
+public class Money implements Expression {
+    // ...
+    public Money reduce(String to) {
+        return this;
+    }
+
+}
+
+public interface Expression {
+    Money reduce(String to);
+}
+
+public class Bank {
+    public Money reduce(Expression source, String to) {
+        return source.reduce(to);
+    }
+}
+
+```
+
+````
+@Test
+public void testReduceMoney() {
+    Bank bank = new Bank();
+    Money result = bank.reduce(Money.dollar(1), "USD");
+    assertEquals(Money.dollar(1), result);
+}
+````
+
+### 결과
+
+> ### story
+> 1. $5 + 10 CHF = $10 if rate is 2:1
+> 2. **$5 + $5 = $10**
+> 3. Return Money from $5 + $5
+> 4. ~~Bank.reduce(Money)~~
+> 5. Reduce(Bank, String)
+
 ## 14. Change
 
 ## 15. Mixed Currencies
